@@ -3,7 +3,7 @@ import socket
 class TCPclient():
     def __init__(self, sms):
         self.target_ip = 'localhost'
-        self.target_port = 9988
+        self.target_port = 9898
         self.send_and_recv_data = {}
 
         self.client_sms = bytes(sms, 'utf-8')

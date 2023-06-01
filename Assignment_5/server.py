@@ -6,8 +6,9 @@ import os
 class TCPserver():
     def __init__(self):
         self.server_ip = 'localhost'
-        self.server_port = 9988
+        self.server_port = 9898
         self.toSave = {}
+        self.length = len(self.toSave)
 
     def main(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -27,31 +28,46 @@ class TCPserver():
             from_client = sock.recv(1024)
             received_data = from_client.decode("utf-8")
             # print("Received Data From Client:", received_data)
+            # print(type(received_data))
 
             print("Client sent : ", received_data)
 
             try:
-                output = subprocess.getoutput(received_data)
+                if received_data == "gad":
+                    self.toSave.update({self.length: received_data})
+                    self.length = self.length + 1
+                    value_from_kvpair = str(self.toSave)
 
-                # result = output.stdout.decode()
-                output = subprocess.run(received_data, capture_output=True, shell=True)
-                result = output.returncode
-                client_cmd = output.stdout.decode('utf-8')
-                if result == 1:
-                    print("Data received!")
-                    # self.toSave.update(received_data)
-                    message = "server got it:>" + received_data
-                    to_send = bytes(message, 'utf-8')
-                    sock.send(to_send)
+                    all_server_data = bytes(value_from_kvpair, 'utf-8')
+                    sock.send(all_server_data)
                 else:
-                    # return_valued = os.system(received_data)
-                    print("*****************\n",client_cmd )
-                    print("********************")
-                    server_data = bytes(client_cmd,'utf-8')
-                    sock.send(server_data)
+                    try:
+                        output = subprocess.getoutput(received_data)
 
+                        # result = output.stdout.decode()
+                        output = subprocess.run(received_data, capture_output=True, shell=True)
+                        result = output.returncode
+                        client_cmd = output.stdout.decode('utf-8')
+                        if result == 1:
+                            print("Data received!")
+                            message = "server got it:>" + received_data
+                            to_send = bytes(message, 'utf-8')
+                            sock.send(to_send)
+                        else:
+                            # return_valued = os.system(received_data)
+                            print("*****************\n", client_cmd)
+                            print("********************")
+                            server_data = bytes(client_cmd, 'utf-8')
+                            sock.send(server_data)
+                        self.toSave.update({self.length: received_data})
+                        self.length = self.length + 1
+
+                    except Exception as err:
+                        print(err)
             except Exception as err:
                 print(err)
+
+
 
 
 if __name__ == '__main__':
