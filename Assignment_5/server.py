@@ -1,7 +1,6 @@
-
+#getting all data on server with gad
 import socket
 import subprocess
-import os
 
 class TCPserver():
     def __init__(self):
@@ -17,15 +16,15 @@ class TCPserver():
         print("Server listen on port:{} and ip {}".format(self.server_port, self.server_ip))
         try:
             while True:
-                client, address = server.accept()
+                client_conn, address = server.accept()
                 print("Accepted Connection from - {} : {} ".format(address[0], address[1]))
-                self.handle_client(client)
+                self.handle_client(client_conn)
         except Exception as err:
             print(err)
 
     def handle_client(self, client_socket):
-        with client_socket as sock:
-            from_client = sock.recv(1024)
+        with client_socket as sock_conn:
+            from_client = sock_conn.recv(1024)
             received_data = from_client.decode("utf-8")
             # print("Received Data From Client:", received_data)
             # print(type(received_data))
@@ -39,7 +38,7 @@ class TCPserver():
                     value_from_kvpair = str(self.toSave)
 
                     all_server_data = bytes(value_from_kvpair, 'utf-8')
-                    sock.send(all_server_data)
+                    sock_conn.send(all_server_data)
                 else:
                     try:
                         output = subprocess.getoutput(received_data)
@@ -52,13 +51,12 @@ class TCPserver():
                             print("Data received!")
                             message = "server got it:>" + received_data
                             to_send = bytes(message, 'utf-8')
-                            sock.send(to_send)
+                            sock_conn.send(to_send)
                         else:
-                            # return_valued = os.system(received_data)
                             print("*****************\n", client_cmd)
                             print("********************")
                             server_data = bytes(client_cmd, 'utf-8')
-                            sock.send(server_data)
+                            sock_conn.send(server_data)
                         self.toSave.update({self.length: received_data})
                         self.length = self.length + 1
 
