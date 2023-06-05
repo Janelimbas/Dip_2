@@ -1,5 +1,10 @@
 #send gad and got all data on server
 import socket
+import pymongo
+
+connection = pymongo.MongoClient("localhost", 27017)
+database = connection["ncc_dip2"]
+collection = database["user_info"]
 class TCPclient():
     def __init__(self, sms):
         self.target_ip = 'localhost'

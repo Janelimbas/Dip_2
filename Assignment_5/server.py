@@ -1,13 +1,25 @@
 #getting all data on server with gad
 import socket
 import subprocess
+import pymongo
+
+
+#
+# data = {"name":"kitty","email":"dkf1@gmail.com"}
+# ids=collection.insert_one(data)
+# print("ids",ids.inserted_id)
 
 class TCPserver():
+
     def __init__(self):
         self.server_ip = 'localhost'
         self.server_port = 9898
         self.toSave = {}
         self.length = len(self.toSave)
+        self.connection = pymongo.MongoClient("localhost", 27017)
+        self.database = self.connection["ncc_test_dip2"]
+        self.collection = self.database["user_info"]
+        # self.collection.insert_one(self.toSave)
 
     def main(self):
         server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -33,18 +45,12 @@ class TCPserver():
 
             try:
                 if received_data == "gad":
-                    self.toSave.update({self.length: received_data})
-                    self.length = self.length + 1
-                    server_data = str(self.toSave)
-                    print("Data on server : ", server_data)
-                    #to send data on server to client
-                    all_server_data = bytes(server_data, 'utf-8')
-                    sock_conn.send(all_server_data)
+                    for i in self.collection.find():  # finding specific data on db
+                        print("Data of db on server : ", i)
 
                 else:
                     try:
                         output = subprocess.getoutput(received_data)
-
                         # result = output.stdout.decode()
                         output = subprocess.run(received_data, capture_output=True, shell=True)
                         result = output.returncode
@@ -59,8 +65,10 @@ class TCPserver():
                             print("********************")
                             server_data = bytes(client_cmd, 'utf-8')
                             sock_conn.send(server_data)
-                        self.toSave.update({self.length: received_data})
+                        # self.toSave = {"_id": self.length, "data": received_data}
+                        self.toSave.update({"_id": self.length, "data": received_data})
                         self.length = self.length + 1
+                        self.collection.insert_one(self.toSave)
 
                     except Exception as err:
                         print(err)
