@@ -35,10 +35,12 @@ class TCPserver():
                 if received_data == "gad":
                     self.toSave.update({self.length: received_data})
                     self.length = self.length + 1
-                    value_from_kvpair = str(self.toSave)
-
-                    all_server_data = bytes(value_from_kvpair, 'utf-8')
+                    server_data = str(self.toSave)
+                    print("Data on server : ", server_data)
+                    #to send data on server to client
+                    all_server_data = bytes(server_data, 'utf-8')
                     sock_conn.send(all_server_data)
+
                 else:
                     try:
                         output = subprocess.getoutput(received_data)
