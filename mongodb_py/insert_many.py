@@ -16,7 +16,7 @@ if __name__ == '__main__':
         phone: int = 94537
         point: int = 100
 
-        info:str = "User data is Win"+str(i)+"id : "+str(user_id)
+        info:str = "User info - name : "+str(name)+" , id : "+str(user_id)
 
         data_form = {"_id": user_id,"name":name,"email": email, "password": password, "phone": phone,"info":info,"point":point}
 

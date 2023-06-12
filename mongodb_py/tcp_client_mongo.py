@@ -135,8 +135,9 @@ class TCPclient():
             reply = received_from_server.decode("utf-8")
             length = len(reply)
 
-            if length == 47:
+            if length == 56:
                 print(reply)
+                self.register(info)
             else:
                 to_ask_name = str(input(reply))
                 r_name = bytes(to_ask_name, 'utf8')

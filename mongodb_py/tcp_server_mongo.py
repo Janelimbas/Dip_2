@@ -142,7 +142,7 @@ class TCPserver():
             r_phone = getting_ph.decode("utf-8")
 
             point:int = 100
-            info: str = "User data is " + str(name) + "id : " + str(id)
+            info: str = "User info - name: " + str(name) + ", id : " + str(id)
 
             data_form = {"_id":id,"name":name, "email":r_email, "password":r_pass,"phone": r_phone,"info":info, "point": point}
             # to update data to mongodb

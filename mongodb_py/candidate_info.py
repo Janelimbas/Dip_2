@@ -15,7 +15,7 @@ if __name__ == '__main__':
         phone: int = 94537
         vote_point:int=0
 
-        info:str = "Candidate Info "+str(i)+"id : "+str(user_id)
+        info:str = "Candidate Info - name: "+str(name)+" , id : "+str(user_id)
 
         data_form = {"_id": user_id,"name":name ,"email": email, "phone": phone,"info":info,"vote_point":vote_point}
 
